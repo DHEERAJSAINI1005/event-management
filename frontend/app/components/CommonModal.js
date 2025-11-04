@@ -83,7 +83,7 @@ export default function CommonModal({
           Cancel
         </Button>
 
-        {submitLabel.length > 0 && <Button
+        {submitLabel && submitLabel.length > 0 && <Button
           onClick={onSubmit}
           variant="contained"
           color="primary"
