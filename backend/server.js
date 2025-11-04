@@ -12,7 +12,7 @@ connectDB();
 const app = express();
 app.use(
   cors({
-    origin: "https://event-management-3n3p.vercel.app/",
+    origin: "https://event-management-3n3p.vercel.app",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true, 
   })
