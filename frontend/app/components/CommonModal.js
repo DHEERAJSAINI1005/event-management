@@ -83,7 +83,7 @@ export default function CommonModal({
           Cancel
         </Button>
 
-        <Button
+        {submitLabel.length > 0 && <Button
           onClick={onSubmit}
           variant="contained"
           color="primary"
@@ -98,7 +98,7 @@ export default function CommonModal({
           }}
         >
           {submitLabel}
-        </Button>
+        </Button>}
       </DialogActions>
     </Dialog>
   );
