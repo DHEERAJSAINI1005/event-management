@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import axios from "axios";
 import { Box, Typography, TextField, Button, Paper } from "@mui/material";
-import { API_BASE_URL } from "../constants/constant";
+import { API_BASE_URL } from "@/app/constants/constant";
 
 export const BASE_URL = `${API_BASE_URL}/events`;
 
