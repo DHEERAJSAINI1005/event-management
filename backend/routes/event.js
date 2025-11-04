@@ -6,7 +6,8 @@ import {
   updateEvent,
   deleteEvent,
   searchEvents,
-  registerGuest
+  registerGuest,
+  getEventRegistrations
 } from "../controllers/event.js";
 import { authMiddleware } from "../middleware/auth.js";
 
@@ -19,6 +20,7 @@ router.delete("/:id", authMiddleware, deleteEvent);
 
 router.get("/public/:slug", getEventBySlug);
 router.post("/public/:slug/register", registerGuest);
+router.get("/:id/registrations", getEventRegistrations);
 
 router.get("/search", searchEvents);
 

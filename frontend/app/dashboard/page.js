@@ -29,9 +29,13 @@ import TopBar from "../components/TopBar";
 import AppLogo from "../components/AppLogo";
 import Loader from "../components/Loader";
 import { API_BASE_URL } from "../constants/constant"; 
+import RefreshIcon from '@mui/icons-material/Refresh';
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 export default function Dashboard() {
   const [events, setEvents] = useState([]);
+  const [selectedRegistrations, setSelectedRegistrations] = useState([]);
+  const [openRegistrationsModal, setOpenRegistrationsModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState("");
   const [role, setRole] = useState("");
@@ -161,6 +165,22 @@ export default function Dashboard() {
     window.location.href = "/";
   };
 
+  const viewRegistrations = async (eventId) => {
+  try {
+    setLoading(true);
+    const { data } = await axios.get(`${API_BASE_URL}/events/${eventId}/registrations`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    setSelectedRegistrations(data);
+    setOpenRegistrationsModal(true);
+  } catch (err) {
+    console.error("Error fetching registrations:", err);
+    alert("Failed to load registrations");
+  } finally {
+    setLoading(false);
+  }
+};
+
   return (
     <Box p={3} bgcolor="#f9fafc" minHeight="100vh">
       <Stack direction="row" justifyContent="space-between" alignItems="center" mb={3}>
@@ -174,7 +194,7 @@ export default function Dashboard() {
               <Button variant="contained" startIcon={<AddCircleOutlineIcon />} onClick={() => setOpenEventModal(true)}>
                 Create Event
               </Button>
-            <Button variant="outlined" onClick={() => fetchEvents(token)}>Refresh</Button>
+            <Button variant="outlined" onClick={() => fetchEvents(token)}><RefreshIcon/></Button>
           </Stack>
 
           <Stack direction="row" spacing={1} alignItems="center">
@@ -228,6 +248,9 @@ export default function Dashboard() {
                       <a href={getPublicUrl(ev)} target="_blank" rel="noreferrer">
                         <IconButton size="small"><OpenInNewIcon /></IconButton>
                       </a>
+                      <IconButton size="small" onClick={() => viewRegistrations(ev._id)}>
+                        <VisibilityIcon /> 
+                      </IconButton>
                     </TableCell>
                     {/* {role === "admin" && (
                       <TableCell align="center">
@@ -260,6 +283,38 @@ export default function Dashboard() {
           <Grid item size={12}><TextField label="Description" fullWidth multiline rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} /></Grid>
         </Grid>
       </CommonModal>
+
+      <CommonModal
+  open={openRegistrationsModal}
+  onClose={() => setOpenRegistrationsModal(false)}
+  title="Registered Users"
+>
+  {selectedRegistrations.length === 0 ? (
+    <Typography>No users have registered yet.</Typography>
+  ) : (
+    <TableContainer component={Paper}>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Name</TableCell>
+            <TableCell>Email</TableCell>
+            <TableCell>Registered At</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {selectedRegistrations.map((user, i) => (
+            <TableRow key={i}>
+              <TableCell>{user.name}</TableCell>
+              <TableCell>{user.email}</TableCell>
+              <TableCell>{new Date(user.registeredAt).toLocaleString()}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  )}
+      </CommonModal>
+
     </Box>
   );
 }

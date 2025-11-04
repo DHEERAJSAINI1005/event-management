@@ -102,3 +102,17 @@ export const registerGuest = async (req, res) => {
     res.status(500).json({ message: "Registration failed" });
   }
 };
+
+export const getEventRegistrations = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const event = await Event.findById(id);
+
+    if (!event) return res.status(404).json({ message: "Event not found" });
+
+    res.json(event.registrations);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to fetch registrations" });
+  }
+};
