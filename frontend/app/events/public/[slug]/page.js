@@ -3,8 +3,9 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import axios from "axios";
 import { Box, Typography, TextField, Button, Paper } from "@mui/material";
+import { API_BASE_URL } from "../constants/constant";
 
-const BASE_URL = "http://localhost:5000/api/events";
+export const BASE_URL = `${API_BASE_URL}/events`;
 
 export default function PublicEventPage() {
   const { slug } = useParams();
